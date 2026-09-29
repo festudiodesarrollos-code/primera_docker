@@ -1,0 +1,42 @@
+ docker build -t flask-config-app .
+[+] Building 6.1s (9/9) FINISHED                           docker:desktop-linux
+ => [internal] load build definition from dockerfile                       0.0s
+ => => transferring dockerfile: 191B                                       0.0s
+ => [internal] load metadata for docker.io/library/python:3.12-slim        0.4s
+ => [internal] load .dockerignore                                          0.0s
+ => => transferring context: 2B                                            0.0s
+ => [internal] load build context                                          0.3s
+ => => transferring context: 263.13kB                                      0.3s
+ => [1/5] FROM docker.io/library/python:3.12-slim@sha256:f77ac9e44ae96ef2  0.1s
+ => => resolve docker.io/library/python:3.12-slim@sha256:f77ac9e44ae96ef2  0.1s
+ => CACHED [2/5] COPY requirements.txt .                                   0.0s
+ => CACHED [3/5] RUN pip install --no-cache-dir -r requirements.txt        0.0s
+ => [4/5] COPY . .                                                         1.4s
+ => exporting to image                                                     3.7s
+ => => exporting layers                                                    2.2s
+ => => exporting manifest sha256:8d5b75ac70cca11db75368d59d2dd1dd4df226a6  0.0s
+ => => exporting config sha256:87441fe588f0119febe8d8dc14133c56d2775c57e9  0.0s
+ => => exporting attestation manifest sha256:9015063c920e03afd83481467aff  0.0s
+ => => exporting manifest list sha256:4ec4dba2c3418d01731ba42af8cb3bc3b31  0.0s
+ => => naming to docker.io/library/flask-config-app:latest                 0.0s
+ => => unpacking to docker.io/library/flask-config-app:latest              1.2s
+(venv) festudio@pop-os:~/primera_flask$ docker run -d --name app-dev -p 5000:5000 \
+  -e NOMBRE_APP="Aplicación Desarrollo" \
+  -e ENTORNO="desarrollo" \
+  flask-config-app
+15d1daebc7ce265fb67ee93a6c87eb6386eae4e9c881c1ec5939508a92d3e85c
+(venv) festudio@pop-os:~/primera_flask$ docker stop app-dev && docker rm app-dev
+app-dev
+app-dev
+(venv) festudio@pop-os:~/primera_flask$ docker run -d --name app-test -p 5000:5000 \
+  -e NOMBRE_APP="Aplicación Prueba" \
+  -e ENTORNO="prueba" \
+  flask-config-app
+811c99fe341820e873466c7575ca6ba70a5e15197632439d999d1f8676e6a382
+(venv) festudio@pop-os:~/primera_flask$ docker stop app-test && docker rm app-test
+app-test
+app-test
+(venv) festudio@pop-os:~/primera_flask$ docker run -d --name app-env -p 5000:5000 \
+  --env-file .env \
+  flask-config-app
+30050f8cdd5cd6b89c00803543e348e90d2cac93728d56c239cbbdbf3462e015

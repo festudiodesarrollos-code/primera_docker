@@ -1,0 +1,5 @@
+Fue posible gracias al principio de desacoplamiento entre el código fuente y su configuración en tiempo de ejecución (patrón de los Twelve-Factor Apps).
+
+La imagen Docker actúa como un molde inmutable que empaqueta el código y sus dependencias. Dentro del código, la aplicación no tiene definidos los valores fijos ("hardcodeados"), sino que consulta las variables del sistema operativo mediante os.getenv(...).
+
+Al iniciar el contenedor (docker run), el motor de Docker inyecta esas variables en el entorno aislado del contenedor a través de los flags -e o --env-file. Por ende, el mismo artefacto binario/imagen puede ser ejecutado con comportamientos y configuraciones totalmente diferentes sin necesidad de recompilar o volver a ejecutar docker build.

@@ -1,8 +1,14 @@
+import os
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
+def home():
+    nombre = os.getenv('NOMBRE_APP', 'Nombre por defecto')
+    entorno = os.getenv('ENTORNO', 'desconocido')
+    return f"<h1>{nombre}</h1><p>Entorno activo: {entorno}</p>"
+
 def calculadora():
     resultado = None
     if request.method == "POST":
