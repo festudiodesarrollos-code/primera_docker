@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es-AR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin Rumbos - Viajes y Turismo</title>
+    <link rel="icon" type="image/x-icon" href="./app/public/favicon.ico?v=2">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sr-blue': '#00AEEF',
+                        'sr-black': '#111111',
+                        'sr-rust': '#C85A17'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./app/styles.css">
+    
+    </style>
+</head>
+<body class="bg-gray-50 text-sr-black font-sans antialiased">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-black tracking-wider flex items-center gap-2">
+                <span class="text-sr-black">SIN</span><span class="text-sr-blue">RUMBOS</span>
+            </a>
+            
+            <nav class="hidden md:flex space-x-6 font-semibold">
+                <a href="#nosotros" class="hover:text-sr-blue transition">Nosotros</a>
+                <a href="#flota" class="hover:text-sr-blue transition">Unidades</a>
+                <a href="#paquetes" class="hover:text-sr-blue transition">Paquetes</a>
+                <a href="#galeria" class="hover:text-sr-blue transition">Galería</a>  
+                <a href="#presupuesto" class="hover:text-sr-blue transition">Presupuesto</a>
+                <a href="./admin.html" class="text-white px-4 py-1.5 rounded hover:bg-sr-rust transition">Panel Admin</a>
+            </nav>
+
+            <button id="menu-btn" class="md:hidden text-2xl focus:outline-none">☰</button>
+        </div>
+        <div id="mobile-menu" class="hidden bg-white border-t px-4 py-4 space-y-3 md:hidden">
+            <a href="#nosotros" class="block font-semibold">Nosotros</a>
+            <a href="#flota" class="block font-semibold">Unidades</a>
+            <a href="#paquetes" class="block font-semibold">Paquetes</a>
+            <a href="#galeria" class="block font-semibold">Galería</a>
+            <a href="#presupuesto" class="block font-semibold">Presupuesto</a>
+            <a href="./admin.html" class="block bg-sr-black text-white px-4 py-2 rounded">Panel Admin</a>
+        </div>
+    </header>
+
+    <section class="bg-gradient-to-r from-sr-black to-gray-800 text-white py-24 text-center px-4">
+        <h2 class="text-4xl md:text-6xl font-black mb-4">Tu viaje, nuestra ruta</h2>
+        <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">Soluciones integrales en transporte turístico y viajes programados con la seguridad que te mereces.</p>
+    </section>
+
+    <section id="nosotros" class="py-16 container mx-auto px-4 max-w-4xl text-center">
+        <h3 class="text-3xl font-extrabold mb-6 border-b-4 border-sr-blue inline-block pb-2">Quiénes Somos</h3>
+        <p class="text-gray-700 leading-relaxed text-lg">
+            En <strong>Sin Rumbos</strong> nos apasiona el transporte logístico y de pasajeros. Ofrecemos soluciones integrales adaptadas a empresas, instituciones y particulares, garantizando el máximo confort, seguridad y puntualidad en cada kilómetro recorrido.
+        </p>
+    </section>
+
+    <section id="flota" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-extrabold mb-10 text-center">Nuestra Flota de Unidades</h3>
+            <div id="flota-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </div>
+    </section>
+
+    <section id="paquetes" class="py-16">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-extrabold mb-10 text-center">Próximas Salidas</h3>
+            <div id="viajes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria" class="py-16">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-extrabold mb-10 text-center">Galería</h3>
+            <div id="galeria-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </div>
+    </section>
+
+    <section id="presupuesto" class="py-16 bg-gray-900 text-white">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <h3 class="text-3xl font-extrabold mb-8 text-center text-sr-blue">Solicitud de Presupuesto Logístico</h3>
+            
+            <form id="form-presupuesto" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-sr-black p-8 rounded-2xl shadow-xl">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Tipo de Cliente</label>
+                        <select id="tipo_persona" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 focus:border-sr-blue text-white" required>
+                            <option value="Particular">Particular / Grupo</option>
+                            <option value="Institucion">Institución / Empresa</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Nombre Completo / Responsable</label>
+                        <input type="text" id="pres_nombre" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" required>
+                    </div>
+                    <div id="wrapper-empresa" class="hidden">
+                        <label class="block text-sm font-bold mb-1">Nombre de la Empresa / Institución</label>
+                        <input type="text" id="pres_empresa" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Email</label>
+                            <input type="email" id="pres_email" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Celular</label>
+                            <input type="tel" id="pres_celular" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" placeholder="+54..." required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Fecha/Hora Salida</label>
+                            <input type="datetime-local" id="fecha_salida" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Fecha/Hora Regreso</label>
+                            <input type="datetime-local" id="fecha_regreso" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Pasajeros</label>
+                            <input type="number" id="cant_pasajeros" min="1" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Equipaje</label>
+                            <select id="tipo_equipaje" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white">
+                                <option value="Poco">Poco (Mano)</option>
+                                <option value="Mucho">Mucho (Maletas Grandes)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 relative">
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Origen</label>
+                            <input type="text" id="search-origen" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" placeholder="Ej: Cruz Alta" required autocomplete="off">
+                            <div id="res-origen" class="absolute left-0 right-0 bg-white text-black z-50 rounded max-h-40 overflow-y-auto hidden"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Destino</label>
+                            <input type="text" id="search-destino" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" placeholder="Ej: Cordoba" required autocomplete="off">
+                            <div id="res-destino" class="absolute left-0 right-0 bg-white text-black z-50 rounded max-h-40 overflow-y-auto hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-between space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Detalles del Itinerario / Esperas</label>
+                        <textarea id="itinerario_desc" rows="3" class="w-full p-2.5 rounded bg-gray-800 border border-gray-700 text-white" placeholder="Indique paradas intermedias, recorridos locales o tiempos de espera estimados..."></textarea>
+                    </div>
+                    
+                    <div id="map" class="h-48 rounded bg-gray-700 z-10"></div>
+                    <div id="distancia-display" class="text-sm font-bold text-sr-blue text-right">Distancia calculada: -- km</div>
+
+                    <div class="bg-gray-800 p-3 rounded flex items-center justify-between border border-gray-700">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="captcha-check" class="w-5 h-5 accent-sr-blue" required>
+                            <span class="text-xs text-gray-300">No soy un robot</span>
+                        </div>
+                        <span class="text-[10px] text-gray-500">reCAPTCHA v2</span>
+                    </div>
+
+                    <button type="submit" class="w-full bg-sr-blue text-sr-black font-black py-3 rounded-lg hover:bg-sr-rust hover:text-white transition uppercase tracking-wider">Solicitar Presupuesto Estimado</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    
+
+    <footer class="bg-sr-black text-gray-400 py-12 px-4 border-t-4 border-sr-blue">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
+            <div>
+                <h4 class="text-white font-black text-xl">SIN RUMBOS</h4>
+                <p class="text-sm">Viajes y Turismo</p>
+                <p class="text-xs mt-2 text-gray-500">Germán Franetovich | CUIT 20-36372788-4<br>Cruz Alta – Córdoba, Argentina.</p>
+                <p class="text-[11px] text-gray-600 mt-2">&copy; Todos los derechos reservados 2026</p>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Un proyecto de</p>
+                <a href="https://festudio-dev.vercel.app" target="_blank" class="flex flex-col items-center gap-1 group">
+                    <img src="./public/logofes.png" alt="FEStudios" class="h-8 object-contain transition">
+                    <span class="text-xs font-bold text-white tracking-wider group-hover:text-sr-blue transition">FESTUDIO</span>
+                </a>
+            </div>
+
+            <div class="flex flex-col items-center md:items-end space-y-2 text-sm">
+                <span class="text-white font-bold text-xs uppercase tracking-wider text-gray-500">Canales de Contacto</span>
+                <a href="https://wa.me/5493467440572" target="_blank" class="hover:text-white transition">🟢 WhatsApp</a>
+                <a href="https://instagram.com/sinrumbosviajes" target="_blank" class="hover:text-white transition">📸 Instagram</a>
+                <a href="mailto:sinrumbo.viajesyturismo@gmail.com" class="hover:text-white transition">✉️ Mail</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./app/script.js"></script>
+</body>
+</html>

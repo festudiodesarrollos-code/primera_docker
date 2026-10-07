@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es-AR" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sin Rumbos - Panel de Administración</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "sr-blue": "#00AEEF",
+              "sr-black": "#111111",
+              "sr-rust": "#C85A17",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 font-sans antialiased text-sr-black">
+    
+    <div id="login-section" class="min-h-screen flex items-center justify-center px-4">
+      <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border-t-8 border-sr-blue">
+        <h2 class="text-3xl font-black text-center mb-2">SIN RUMBOS</h2>
+        <p class="text-center text-sm text-gray-500 mb-6">
+          Panel Ejecutivo Logístico
+        </p>
+
+        <form id="form-login" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase mb-1">Usuario o Email</label>
+            <input
+              type="text"
+              id="log-user"
+              class="w-full p-2.5 border rounded bg-gray-50"
+              placeholder="Ingresa tu usuario o email"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase mb-1">Contraseña</label>
+            <div class="relative">
+              <input
+                type="password"
+                id="log-pass"
+                class="w-full p-2.5 border rounded bg-gray-50 pr-10"
+                placeholder="Ingresa tu contraseña"
+                required
+              />
+              <span
+                type="button" 
+                onclick="revelarContrasenaTemporaria()" 
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-sr-blue font-bold text-xs"
+                title="Ver contraseña por 5 segundos"
+                style="cursor:pointer"
+              >
+                👁️
+              </span>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-sr-blue text-white py-2.5 rounded font-bold hover:bg-sr-black transition tracking-wider"
+          >
+            INGRESAR
+          </button>
+        </form>
+        <div class="mt-4 text-center">
+          <button
+            onclick="recuperarPassword()"
+            class="text-xs text-sr-rust font-semibold hover:underline"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboard-section" class="hidden min-h-screen flex flex-col">
+      <header class="bg-sr-black text-white p-4 flex justify-between items-center shadow-md">
+        <h1 class="text-xl font-black tracking-wider">
+          SIN RUMBOS <span class="text-sr-blue">ADMIN</span>
+        </h1>
+        <button
+          onclick="cerrarSesion()"
+          class="bg-sr-rust text-white px-4 py-1.5 text-xs font-bold rounded hover:bg-red-700 transition"
+        >
+          Cerrar Sesión
+        </button>
+      </header>
+
+      <main class="flex-1 container mx-auto px-4 py-8 max-w-6xl space-y-8">
+        
+        <div class="bg-white p-6 rounded-xl shadow border">
+          <h3 class="font-black text-lg mb-4 text-sr-blue uppercase text-sm tracking-wider">
+            Añadir Foto al Book de Viajes
+          </h3>
+          <form id="form-admin-galeria" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+              <label class="block text-xs font-bold uppercase mb-1">Título de la Foto</label>
+              <input type="text" id="gal-titulo" class="w-full p-2 border rounded" placeholder="Ej: Atardecer en Bariloche" required />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase mb-1">Breve Descripción (Opcional)</label>
+              <input type="text" id="gal-desc" class="w-full p-2 border rounded" placeholder="Ej: Grupo de viaje de egresados" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase mb-1">Archivo de Imagen</label>
+              <input type="file" id="gal-file" class="w-full text-xs" accept="image/*" required />
+            </div>
+            <button type="submit" class="md:col-span-3 w-full bg-sr-blue text-white py-2 rounded font-bold hover:bg-sr-black transition">
+              SUBIR E INTEGRAR A LA WEB
+            </button>
+          </form>
+
+          <h4 class="font-bold text-sm text-gray-600 mt-8 mb-3 uppercase tracking-wider">
+            Fotos en el Book (Haga clic en 🗑️ para quitar)
+          </h4>
+          <div id="admin-galeria-list" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-xl shadow border">
+            <h3 class="font-black text-lg mb-4 text-sr-blue uppercase text-sm tracking-wider">
+              Publicar Nuevo Viaje
+            </h3>
+            <form id="form-admin-viaje" class="space-y-3">
+              <input type="text" id="adm-titulo" placeholder="Título del viaje" class="w-full p-2 border rounded" required />
+              <select id="adm-tipo" class="w-full p-2 border rounded" required>
+                <option value="Show">Show</option>
+                <option value="Evento">Evento</option>
+                <option value="Paquete">Paquete</option>
+                <option value="Otros">Otros</option>
+              </select>
+              <input type="text" id="adm-destino" placeholder="Destino (Ciudad, País)" class="w-full p-2 border rounded" required />
+              <input type="date" id="adm-fecha" class="w-full p-2 border rounded" required />
+              <input type="number" id="adm-precio" placeholder="Precio ($)" class="w-full p-2 border rounded" required />
+              <select id="adm-estado" class="w-full p-2 border rounded" required>
+                <option value="Disponible">Disponible</option>
+                <option value="Últimos Cupos">Últimos Cupos</option>
+                <option value="Agotado">Agotado</option>
+              </select>
+              <div>
+                <label class="block text-xs font-bold text-gray-400 mb-1">Imagen Referencial</label>
+                <input type="file" id="adm-imagen" class="w-full text-xs" />
+              </div>
+              <button type="submit" class="w-full bg-sr-black text-white py-2 rounded font-bold hover:bg-sr-blue transition">
+                Guardar Viaje
+              </button>
+            </form>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl shadow border lg:col-span-2">
+            <h3 class="font-black text-lg mb-4 text-sr-rust uppercase text-sm tracking-wider">
+              Gestión de Viajes Activos
+            </h3>
+            <div id="admin-viajes-list" class="space-y-2 max-h-96 overflow-y-auto"></div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow border">
+          <h3 class="font-black text-lg mb-4 text-gray-800 uppercase text-sm tracking-wider">
+            Historial de Presupuestos Solicitados
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="p-3">Cliente / Tipo</th>
+                  <th class="p-3">Contacto</th>
+                  <th class="p-3">Origen ➡️ Destino</th>
+                  <th class="p-3">Fechas (Salida/Regreso)</th>
+                  <th class="p-3 text-center">Pasajeros</th>
+                </tr>
+              </thead>
+              <tbody id="admin-presupuestos-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./app/script.js"></script> 
+    
+    <script>
+      // Al cargar el documento, comprobamos si tenemos un usuario guardado previamente
+      document.addEventListener("DOMContentLoaded", () => {
+        const usuarioGuardado = localStorage.getItem("remembered_admin_user");
+        if (usuarioGuardado) {
+          document.getElementById("log-user").value = usuarioGuardado;
+        }
+      });
+
+      // Función para mostrar la contraseña durante 5 segundos exactos
+      function revelarContrasenaTemporaria() {
+        const passInput = document.getElementById("log-pass");
+        if (passInput.type === "password") {
+          passInput.type = "text";
+          clearTimeout(temporizadorContrasena); // Limpiamos cualquier temporizador previo
+          temporizadorContrasena = setTimeout(() => {
+            passInput.type = "password";
+          }, 5000); // 5000ms = 5 segundos
+        } else {
+          passInput.type = "password"; // Si ya estaba visible, lo ocultamos inmediatamente
+          clearTimeout(temporizadorContrasena);
+        }
+      }
+
+      // Interceptor del Login
+      document.getElementById("form-login").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const usuario = document.getElementById("log-user").value.trim();
+        const pass = document.getElementById("log-pass").value;
+
+        // CORRECCIÓN: Esperar un instante o re-inicializar localmente si script.js asincrónico no terminó
+        if (!window.supabase && typeof supabasejs !== "undefined" && typeof SUPABASE_URL !== "undefined") {
+          window.supabase = supabasejs.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+
+        try {
+            const activeSupabase = window.supabase || supabase;
+            // Validamos que el cliente de Supabase esté listo antes de consultar
+            if (!supabase) {
+            alert("El servicio de conexión aún se está inicializando. Por favor, aguarde 2 segundos y vuelva a intentar.");
+            return;
+          }
+
+          // Buscamos en la tabla de Supabase utilizando la instancia global calibrada
+          const { data, error } = await supabase
+            .from("administadores")
+            .select("*")
+            .or(`usuario.eq.${usuario},email.eq.${usuario}`);
+
+          if (error) throw error;
+
+          if (data && data.length > 0) {
+            // Guardar el identificador en local storage para evitar tener que tipearlo de nuevo en el futuro
+            localStorage.setItem("remembered_admin_user", usuario);
+
+            // Transición visual limpia a los paneles operativos
+            document.getElementById("login-section").classList.add("hidden");
+            document.getElementById("dashboard-section").classList.remove("hidden");
+            
+            // Ejecutamos las llamadas con nombres reales de funciones presentes en tu script.js
+            await cargarViajes();
+            await cargarPresupuestosAdmin();
+            if( typeof cargarGaleriaAdmin === "function") {
+              await cargarGaleriaAdmin();
+                } 
+            } else {
+            alert("Credenciales incorrectas o usuario no registrado.");
+            }
+        } catch (err) {
+          console.error("Error crítico de enlace a Supabase:", err);
+          alert("Error de conexión al validar accesos. Verifique que sus claves en .env.local sean válidas.");
+        }
+      });
+
+      // Auxiliar por si en tu script.js la carga de viajes de admin se llama cargarViajes()
+      async function cargarViajes() {
+        if (typeof cargarViajes === "function") {
+          await cargarViajes();
+        } else if (typeof cargarViajesAdmin === "function") {
+          await cargarViajesAdmin();
+        }
+      }
+
+      function recuperarPassword() {
+        const email = prompt("Introduce tu email registrado para enviarte las instrucciones:");
+        if (email) {
+          alert("Si el correo electrónico coincide con nuestra base de datos, se despachará un enlace de restablecimiento.");
+        }
+      }
+
+      function cerrarSesion() {
+        window.location.reload();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+¿Por qué el archivo siguió existiendo aunque el primer contenedor fue eliminado?
+
+El archivo siguió existiendo porque los volúmenes en Docker son entidades independientes cuyo ciclo de vida está completamente desacoplado del ciclo de vida de los contenedores.
+
+Cuando un contenedor escribe directamente en la capa de montaje de un volumen, los datos se persisten en el sistema de archivos del host (generalmente gestionado por Docker en /var/lib/docker/volumes/...). Al eliminar el contenedor, se destruye únicamente su capa de lectura/escritura volátil (writable layer), pero el volumen y la información alojada en él permanecen intactos en el host, disponibles para ser montados por cualquier otro contenedor posterior.

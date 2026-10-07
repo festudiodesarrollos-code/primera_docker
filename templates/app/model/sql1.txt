@@ -1,0 +1,41 @@
+-- Tablas Estructurales "Sin Rumbos"
+
+CREATE TABLE flota (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    dominio VARCHAR(20) NOT NULL,
+    marca_modelo VARCHAR(100) NOT NULL,
+    anio INT NOT NULL,
+    asientos INT NOT NULL,
+    descripcion TEXT,
+    vto_seguro DATE NOT NULL,
+    vto_rto DATE NOT NULL
+);
+
+CREATE TABLE viajes (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    tipo VARCHAR(50) CHECK (tipo IN ('Show', 'Evento', 'Paquete', 'Otros')),
+    titulo VARCHAR(150) NOT NULL,
+    destino VARCHAR(150) NOT NULL,
+    fecha DATE NOT NULL,
+    precio NUMERIC NOT NULL,
+    estado VARCHAR(50) CHECK (estado IN ('Disponible', 'Últimos Cupos', 'Agotado')),
+    url_imagen TEXT
+);
+
+CREATE TABLE presupuestos (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    tipo_persona VARCHAR(50),
+    nombre VARCHAR(150),
+    empresa_institucion VARCHAR(150),
+    email VARCHAR(100),
+    celular VARCHAR(50),
+    fecha_salida TIMESTAMP,
+    fecha_regreso TIMESTAMP,
+    pasajeros INT,
+    equipaje VARCHAR(50),
+    origen TEXT,
+    destino TEXT,
+    itinerario_detalles TEXT,
+    distancia_estimada_km NUMERIC,
+    created_at TIMESTAMP DEFAULT NOW()
+);

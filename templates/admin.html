@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Control - Sin Rumbos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brandAzul: "#00AEEF",
+              brandCalido: "#F59E0B",
+              darkBg: "#111111",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+    <div
+      id="login-section"
+      class="flex items-center justify-center min-h-screen px-4"
+    >
+      <div
+        class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-700"
+      >
+        <h1
+          class="text-2xl font-black text-center text-white mb-6 tracking-tight"
+        >
+          SIN RUMBOS <span class="text-brandAzul">PANEL</span>
+        </h1>
+        <form id="form-login" class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-semibold text-gray-400 uppercase mb-2"
+              >Usuario</label
+            >
+            <input
+              type="text"
+              id="login_user"
+              class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white outline-none focus:ring-2 focus:ring-brandAzul transition"
+              required
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-semibold text-gray-400 uppercase mb-2"
+              >Contraseña</label
+            >
+            <input
+              type="password"
+              id="login_pass"
+              class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white outline-none focus:ring-2 focus:ring-brandAzul transition"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-brandAzul text-white font-bold py-3 rounded-lg hover:bg-opacity-90 transition mt-2 shadow-lg"
+          >
+            Ingresar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="admin-dashboard"
+      class="hidden min-h-screen flex flex-col md:flex-row"
+    >
+      <aside
+        class="w-full md:w-64 bg-black p-6 flex flex-col justify-between border-r border-gray-800"
+      >
+        <div>
+          <h2 class="text-xl font-black text-white tracking-wider mb-8">
+            SIN RUMBOS
+          </h2>
+          <nav class="space-y-2">
+            <button
+              onclick="switchTab('tab-flota')"
+              class="tab-btn w-full text-left px-4 py-3 rounded-xl flex items-center space-x-3 hover:bg-gray-800 font-medium transition text-brandAzul bg-gray-800"
+              data-tab="tab-flota"
+            >
+              <i class="fa-solid fa-bus"></i> <span>Flota</span>
+            </button>
+            <button
+              onclick="switchTab('tab-viajes')"
+              class="tab-btn w-full text-left px-4 py-3 rounded-xl flex items-center space-x-3 hover:bg-gray-800 font-medium transition text-gray-400"
+              data-tab="tab-viajes"
+            >
+              <i class="fa-solid fa-route"></i> <span>Viajes / Catálogo</span>
+            </button>
+            <button
+              onclick="switchTab('tab-equipajes')"
+              class="tab-btn w-full text-left px-4 py-3 rounded-xl flex items-center space-x-3 hover:bg-gray-800 font-medium transition text-gray-400"
+              data-tab="tab-equipajes"
+            >
+              <i class="fa-solid fa-qrcode"></i>
+              <span>Equipaje (Res. 4/2026)</span>
+            </button>
+          </nav>
+        </div>
+        <button
+          onclick="logout()"
+          class="w-full mt-8 bg-red-950/40 text-red-400 border border-red-900 px-4 py-2 rounded-lg hover:bg-red-900 hover:text-white transition text-sm font-semibold"
+        >
+          <i class="fa-solid fa-right-from-bracket mr-2"></i> Cerrar Sesión
+        </button>
+      </aside>
+
+      <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+        <section id="tab-flota" class="tab-content space-y-8">
+          <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-bold text-white">
+              Gestión de Unidades de Flota
+            </h2>
+            <button
+              onclick="abrirModalFlota()"
+              class="bg-brandAzul text-white font-bold px-4 py-2 rounded-lg text-sm shadow"
+            >
+              <i class="fa-solid fa-plus mr-1"></i> Alta Unidad
+            </button>
+          </div>
+          <div
+            class="bg-gray-800 rounded-xl overflow-x-auto border border-gray-700"
+          >
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr
+                  class="bg-gray-900 text-xs font-bold text-gray-400 uppercase border-b border-gray-700"
+                >
+                  <th class="p-4">Patente</th>
+                  <th class="p-4">Marca / Modelo</th>
+                  <th class="p-4 text-center">Asientos</th>
+                  <th class="p-4">Vto Seguro</th>
+                  <th class="p-4">Vto RTO</th>
+                  <th class="p-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody
+                id="table-flota-body"
+                class="text-sm divide-y divide-gray-700"
+              ></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="tab-viajes" class="tab-content space-y-8 hidden">
+          <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-bold text-white">
+              Mantenimiento de Catálogo de Viajes
+            </h2>
+            <button
+              onclick="abrirModalViaje()"
+              class="bg-brandAzul text-white font-bold px-4 py-2 rounded-lg text-sm shadow"
+            >
+              <i class="fa-solid fa-plus mr-1"></i> Publicar Viaje
+            </button>
+          </div>
+          <div
+            class="bg-gray-800 rounded-xl overflow-x-auto border border-gray-700"
+          >
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr
+                  class="bg-gray-900 text-xs font-bold text-gray-400 uppercase border-b border-gray-700"
+                >
+                  <th class="p-4">Destino / Título</th>
+                  <th class="p-4">Fecha Salida</th>
+                  <th class="p-4">Precio</th>
+                  <th class="p-4">Estado</th>
+                  <th class="p-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody
+                id="table-viajes-body"
+                class="text-sm divide-y divide-gray-700"
+              ></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="tab-equipajes" class="tab-content space-y-8 hidden">
+          <div class="border-b border-gray-800 pb-4">
+            <h2 class="text-2xl font-bold text-white">
+              Módulo Logístico de Equipajes & Listas (Res. 4/2026)
+            </h2>
+            <p class="text-sm text-gray-400 mt-1">
+              Despacho en base, impresión de stickers térmicos y control offline
+              en ruta.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+              class="bg-gray-800 p-6 rounded-xl border border-gray-700 md:col-span-1 space-y-4"
+            >
+              <label class="block text-xs font-bold text-gray-400 uppercase"
+                >Seleccionar Viaje/Servicio del Día</label
+              >
+              <select
+                id="select-viaje-equipaje"
+                class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white outline-none focus:ring-2 focus:ring-brandAzul"
+                onchange="cargarPasajerosPorViaje()"
+              >
+                <option value="">-- Seleccionar itinerario --</option>
+              </select>
+
+              <div class="pt-4 border-t border-gray-700 space-y-2">
+                <label class="block text-xs font-bold text-gray-400 uppercase"
+                  >Exportación Legal Mandatoria</label
+                >
+                <button
+                  onclick="exportarManifiestoA4()"
+                  class="w-full bg-gray-700 text-white p-2 rounded text-xs font-bold hover:bg-gray-600 transition"
+                >
+                  <i class="fa-solid fa-file-pdf mr-1"></i> Imprimir Lista
+                  Pasajeros A4 (Provincial)
+                </button>
+                <button
+                  onclick="exportarCNRT_CSV()"
+                  class="w-full bg-blue-950/50 text-blue-400 border border-blue-900 p-2 rounded text-xs font-bold hover:bg-blue-900 hover:text-white transition"
+                >
+                  <i class="fa-solid fa-file-csv mr-1"></i> Generar CSV de
+                  Contingente (DUT CNRT)
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="bg-gray-800 p-6 rounded-xl border border-gray-700 md:col-span-2 space-y-4"
+            >
+              <div class="flex justify-between items-center">
+                <h3 class="text-md font-bold text-white">
+                  Despacho e Impresión Térmica
+                </h3>
+                <button
+                  onclick="agregarPasajeroRapido()"
+                  class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded hover:bg-gray-600"
+                >
+                  <i class="fa-solid fa-user-plus"></i> Añadir Pasajero
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead>
+                    <tr class="bg-gray-900 text-gray-400 uppercase">
+                      <th class="p-3">Pasajero (DNI)</th>
+                      <th class="p-3 text-center">Bultos</th>
+                      <th class="p-3 text-right">Etiquetas</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="table-pasajeros-body"
+                    class="divide-y divide-gray-700"
+                  >
+                    <tr>
+                      <td colspan="3" class="p-4 text-center text-gray-500">
+                        Seleccioná un viaje para ver e indexar el pasaje.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-gray-800 p-6 rounded-xl border border-gray-700 space-y-4"
+          >
+            <h3 class="text-md font-bold text-white flex items-center gap-2">
+              <span
+                class="w-2 h-2 rounded-full bg-green-500 animate-ping"
+              ></span>
+              Escaneo en Ruta (Módulo Chofer Offline)
+            </h3>
+            <p class="text-xs text-gray-400">
+              Verificación de pertenencia estricta por string plano decodificado
+              en tiempo real.
+            </p>
+            <div class="flex flex-col md:flex-row gap-6 items-center">
+              <div
+                class="w-full md:w-72 h-52 bg-black rounded-xl overflow-hidden border border-gray-600 relative flex items-center justify-center"
+              >
+                <div
+                  id="scanner-preview"
+                  class="w-full h-full object-cover"
+                ></div>
+              </div>
+              <div class="flex-1 space-y-3">
+                <div class="flex gap-2">
+                  <button
+                    onclick="iniciarEscaneoRuta()"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-3 rounded-lg text-xs transition"
+                  >
+                    <i class="fa-solid fa-camera mr-1"></i> Iniciar Cámara
+                    Trasera
+                  </button>
+                  <button
+                    onclick="detenerEscaneoRuta()"
+                    class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-4 py-3 rounded-lg text-xs transition"
+                  >
+                    Apagar
+                  </button>
+                </div>
+                <div
+                  id="scanner-result"
+                  class="p-4 rounded-xl text-sm font-bold border border-gray-700 bg-gray-900 text-gray-500"
+                >
+                  Esperando lectura de sticker autoadhesivo...
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div
+      id="modal-flota"
+      class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+    >
+      <div
+        class="bg-gray-800 p-6 rounded-xl w-full max-w-md border border-gray-700 space-y-4"
+      >
+        <h3 class="text-lg font-bold text-white">
+          Alta / Modificación de Unidad
+        </h3>
+        <div class="space-y-3">
+          <input
+            type="text"
+            id="f_patente"
+            placeholder="Patente / Dominio"
+            class="w-full bg-gray-900 p-2.5 rounded border border-gray-700 text-sm text-white"
+          />
+          <input
+            type="text"
+            id="f_modelo"
+            placeholder="Marca y Modelo"
+            class="w-full bg-gray-900 p-2.5 rounded border border-gray-700 text-sm text-white"
+          />
+          <input
+            type="number"
+            id="f_asientos"
+            placeholder="Cantidad Asientos"
+            class="w-full bg-gray-900 p-2.5 rounded border border-gray-700 text-sm text-white"
+          />
+          <input
+            type="text"
+            id="f_desc"
+            placeholder="Descripción corta"
+            class="w-full bg-gray-900 p-2.5 rounded border border-gray-700 text-sm text-white"
+          />
+          <div>
+            <label class="block text-xs text-gray-400 mb-1">Vto Seguro</label>
+            <input
+              type="date"
+              id="f_seguro"
+              class="w-full bg-gray-900 p-2.5 rounded border border-gray-700 text-sm text-white"
+            />
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1"
+              >Vto RTO / CNRT</label
+            >
+            <input
+              type="date"
+              id="f_rto"
+              class="w-full bg-gray-900 p-2.5 rounded border border-gray-700 text-sm text-white"
+            />
+          </div>
+        </div>
+        <div class="flex justify-end space-x-2 pt-2">
+          <button
+            onclick="cerrarModalFlota()"
+            class="bg-gray-700 px-4 py-2 rounded text-xs"
+          >
+            Cancelar
+          </button>
+          <button
+            onclick="guardarUnidadFlota()"
+            class="bg-brandAzul text-white px-4 py-2 rounded text-xs font-bold"
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="modal-viaje"
+      class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+    >
+      <div
+        class="bg-gray-800 p-6 rounded-xl w-full max-w-lg border border-gray-700 space-y-3 max-h-[90vh] overflow-y-auto"
+      >
+        <h3 class="text-lg font-bold text-white">
+          Publicar Nuevo Paquete o Show
+        </h3>
+        <input
+          type="text"
+          id="v_titulo"
+          placeholder="Título del Evento / Destino"
+          class="w-full bg-gray-900 p-2 rounded text-sm text-white"
+        />
+        <textarea
+          id="v_desc"
+          placeholder="Descripción completa del servicio..."
+          class="w-full bg-gray-900 p-2 rounded text-sm text-white"
+          rows="2"
+        ></textarea>
+        <input
+          type="text"
+          id="v_destino"
+          placeholder="Ciudad de Destino"
+          class="w-full bg-gray-900 p-2 rounded text-sm text-white"
+        />
+        <input
+          type="datetime-local"
+          id="v_fecha"
+          class="w-full bg-gray-900 p-2 rounded text-sm text-white"
+        />
+        <input
+          type="number"
+          id="v_precio"
+          placeholder="Precio en ARS ($)"
+          class="w-full bg-gray-900 p-2 rounded text-sm text-white"
+        />
+        <select
+          id="v_estado"
+          class="w-full bg-gray-900 p-2 rounded text-sm text-white"
+        >
+          <option value="disponible">Disponible</option>
+          <option value="ultimos_cupos">Últimos Cupos</option>
+          <option value="agotado">Agotado</option>
+        </select>
+        <input
+          type="text"
+          id="v_msg"
+          placeholder="Mensaje personalizado WhatsApp predeterminado"
+          class="w-full bg-gray-900 p-2 rounded text-sm text-white"
+        />
+        <div>
+          <label class="block text-xs text-gray-400 mb-1"
+            >Imagen del Destino / Show</label
+          >
+          <input
+            type="file"
+            id="v_file"
+            class="w-full bg-gray-900 p-2 rounded text-xs text-white"
+          />
+        </div>
+        <div class="flex justify-end space-x-2 pt-2">
+          <button
+            onclick="cerrarModalViaje()"
+            class="bg-gray-700 px-4 py-2 rounded text-xs"
+          >
+            Cancelar
+          </button>
+          <button
+            onclick="guardarViajePaquete()"
+            class="bg-brandAzul text-white px-4 py-2 rounded text-xs font-bold"
+          >
+            Publicar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>

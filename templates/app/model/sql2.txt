@@ -1,0 +1,15 @@
+-- Habilitar la extensión criptográfica si no está activa
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Tabla de Administradores
+CREATE TABLE administradores (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    usuario VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Insertar administrador de prueba (Usuario: admin, Contraseña: SinRumbos2026)
+INSERT INTO administradores (usuario, email, password_hash)
+VALUES ('admin', 'sinrumbo.viajesyturismo@gmail.com', crypt('SinRumbos2026', gen_salt('bf')));

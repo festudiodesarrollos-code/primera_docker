@@ -1,0 +1,38 @@
+/* Estilos estructurales puros que complementan Tailwind */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+#admin-panel input, #admin-panel select {
+    color: #111111 !important;
+}
+
+.viaje-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.viaje-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Custom Scrollbar para el selector predictivo */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+::-webkit-scrollbar-thumb {
+    background: #00AEEF;
+    border-radius: 3px;
+}
+
+/* Ocultar scrollbar en el contenedor de cotizaciones */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

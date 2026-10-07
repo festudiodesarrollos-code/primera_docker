@@ -1,0 +1,9 @@
+-- Tabla para registrar metadatos de la galería
+CREATE TABLE galeria (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    url_imagen TEXT NOT NULL,
+    nombre_archivo_storage TEXT NOT NULL, -- Guardamos esto para poder borrar el archivo físico luego
+    created_at TIMESTAMP DEFAULT NOW()
+);
