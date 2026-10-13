@@ -3,6 +3,12 @@ venv/
 .venv/
 env/
 ENV/
+*.local
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
 
 # Caché y Bytecode de Python
 __pycache__/
@@ -27,4 +33,3 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
-
