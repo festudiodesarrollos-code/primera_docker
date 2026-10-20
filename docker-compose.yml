@@ -12,4 +12,4 @@ services:
 
 volumes:
   practica_datos:
-    external: true
+    name: practica_datos
